@@ -1,0 +1,109 @@
+{
+    "$schema": "../../schemas/generated/blackboard-schema-bundled.json",
+    "blackboard": {
+        "etasl": {
+            "general": {
+                "event_topic": "crospi_node/events",
+                "sample_time": 0.01
+            },
+            "initializer": {
+                "full": true,
+                "sample_time": 0.01,
+                "duration": 3.0,
+                "convergence_criterion": 1E-8,
+                "weightfactor": 1E4
+            },
+            "solver": {
+                "is-qpoasessolver": true,
+                "nWSR": 100,
+                "regularization_factor": 1E-8,
+                "cputime": 10
+            }
+        },
+        "robot": {
+            "robotsimulators": [
+                {
+                    "is-simple_kinematic_simulation": true,
+                    "initial_joints": [3.1416, -1.5708, 1.5708, -1.5708, -1.5708, 0],
+                    "periodicity": 0.01,
+                    "robot_joints": [
+                        "shoulder_pan_joint",
+                        "shoulder_lift_joint",
+                        "elbow_joint",
+                        "wrist_1_joint",
+                        "wrist_2_joint",
+                        "wrist_3_joint"
+                    ]
+                }
+            ],
+            "robotdrivers":[
+                {
+                    "is-urXe_driver_crospi": true,
+                    "ip_address": "192.168.56.102",
+                    "periodicity": 0.02,
+                    "q_acceleration": 1.2,
+                    "robot_joints": [
+                        "shoulder_pan_joint",
+                        "shoulder_lift_joint",
+                        "elbow_joint",
+                        "wrist_1_joint",
+                        "wrist_2_joint",
+                        "wrist_3_joint"
+                    ]
+                }
+            ],
+            "default_robot_specification": {
+                "is-inline_robotspecification": true,
+                "urdf_path": "$[crospi_application]/robot_models/urdf_models/robot_setups/ur10/use_case_setup_ur10.urdf",
+                "tcp_frame": {
+                    "child_link": "tool0",
+                    "parent_link": "base_link"
+                },
+                "additional_frames": [
+                    {
+                        "name": "forearm",
+                        "child_link": "forearm_link",
+                        "parent_link": "base_link"
+                    }
+                ],
+                "robot_joints": [
+                    "shoulder_pan_joint",
+                    "shoulder_lift_joint",
+                    "elbow_joint",
+                    "wrist_1_joint",
+                    "wrist_2_joint",
+                    "wrist_3_joint"
+                ]
+            }
+        },
+        "iohandlers": {
+                "outputhandlers": [
+                    {
+                        "is-JointStateOutputHandler": true,
+                        "topic-name": "/velcmd"
+                    },
+                    {
+                        "is-JointStateOutputHandler": true,
+                        "topic-name": "/joint_states"
+                    },
+                    {
+                        "is-TopicOutputHandler" : true,
+                        "topic-name" : "/my_topic",
+                        "variable-names" : []
+                    }
+                ],
+                "inputhandlers": [
+                    {
+                        "is-TwistInputHandler": true,
+                        "default_twist": {"linear": {"x": 0, "y": 0, "z": 0},"angular": {"x": 0, "y": 0, "z": 0}},
+                        "depth": 1,
+                        "number_of_tries": 10,
+                        "topic-name": "/spacenav/twist",
+                        "when_unpublished": "use_default",
+                        "varname": "joystick_input"
+                    }
+                ]
+            }
+    },
+    "$defs":{}
+}

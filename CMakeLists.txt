@@ -1,0 +1,123 @@
+
+#  Copyright (c) 2025 KU Leuven, Belgium
+#
+#  Author: Santiago Iregui
+#  email: <santiago.iregui@kuleuven.be>
+#
+#  GNU Lesser General Public License Usage
+#  Alternatively, this file may be used under the terms of the GNU Lesser
+#  General Public License version 3 as published by the Free Software
+#  Foundation and appearing in the file LICENSE.LGPLv3 included in the
+#  packaging of this file. Please review the following information to
+#  ensure the GNU Lesser General Public License version 3 requirements
+#  will be met: https://www.gnu.org/licenses/lgpl.html.
+# 
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Lesser General Public License for more details.
+
+cmake_minimum_required(VERSION 3.15)
+project(crospi_application)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+# uncomment the following section in order to fill in
+# further dependencies manually.
+# find_package(<dependency> REQUIRED)
+
+
+
+
+
+# Define the Lua script to be executed
+set(WORK_DIR ${CMAKE_SOURCE_DIR}/task_specifications/libraries)
+set(BASH_SCRIPT_TASK_SCHEMAS ${CMAKE_SOURCE_DIR}/generate_json_schemas_tasks.bash)
+set(TASK_LIBRARIES_DIR ${CMAKE_SOURCE_DIR}/task_specifications/libraries) #Directory containing all task specifications whose json schema is going to be generated automatically
+# set(JSON_SCHEMAS_DIR ${CMAKE_SOURCE_DIR}/task_specifications/task_json_schemas/) #Directory containing all task specifications whose json schema is going to be generated automatically
+set(LUA_ROBOT_SPEC_DIR ${CMAKE_SOURCE_DIR}/robot_models/robot_specifications) #This is used to execute read the task specifications and avoid errors due to missing variables (e.g. task_frame or joint variables).
+set(LUA_ROBOT_SPEC_DIR_INTERPOLATE "\$[${CMAKE_PROJECT_NAME}]/robot_models/robot_specifications") #This is used to execute read the task specifications and avoid errors due to missing variables (e.g. task_frame or joint variables).
+
+
+# [Santiago]: add_custom_target works and generates the task-schema.json, but the execute process doesn't
+add_custom_target(
+  TASKS_SCHEMA_JSON
+  ALL # This target will be built by default (i.e. always)
+  COMMAND bash ${BASH_SCRIPT_TASK_SCHEMAS} ${TASK_LIBRARIES_DIR} ${LUA_ROBOT_SPEC_DIR}  ${LUA_ROBOT_SPEC_DIR_INTERPOLATE} 2>&1 | tee ${CMAKE_SOURCE_DIR}/tasks-schema.log
+  WORKING_DIRECTORY ${WORK_DIR}
+  COMMENT "constructing tasks-schema.json file"
+  VERBATIM #This allows to pass $[ in strings such as defined in LUA_ROBOT_SPEC_DIR_INTERPOLATE
+  )
+  
+set(PYTHON_SCRIPT_PLUGINS_SCHEMAS ${CMAKE_SOURCE_DIR}/generate_json_schemas_plugins.py)
+set(WORK_DIR_PY ${CMAKE_SOURCE_DIR})
+
+#Generate the json schema files for the setup configuration (e.g. related to robotdrivers)
+add_custom_target(
+  PLUGIN_SCHEMA_JSON
+  ALL # This target will be built by default (i.e. always)
+  COMMAND python3 ${PYTHON_SCRIPT_PLUGINS_SCHEMAS} 2>&1 | tee ${CMAKE_SOURCE_DIR}/plugins-schema.log
+  WORKING_DIRECTORY ${WORK_DIR_PY}
+  COMMENT "constructing json schema files for the setup configuration"
+  VERBATIM #This allows to pass $[ in strings such as defined in LUA_ROBOT_SPEC_DIR_INTERPOLATE
+)
+
+set(JSON_SCHEMA_LOCATION_TO_BE_BUNDLED ${CMAKE_SOURCE_DIR}/schemas/blackboard-schema.json) #Directory containing all task specifications whose json schema is going to be generated automatically
+set(BUNDLED_SCHEMA_DIR ${CMAKE_SOURCE_DIR}/schemas/generated/blackboard-schema-bundled.json) #Directory containing all task specifications whose json schema is going to be generated automatically
+set(PYTHON_SCRIPT_BUNDLED_SCHEMA ${CMAKE_SOURCE_DIR}/json_schema_bundler.py)
+
+#Generate a bundled json schema file
+add_custom_target(
+  BUNDLE_SCHEMA_JSON
+  ALL # This target will be built by default (i.e. always)
+  COMMAND python3 ${PYTHON_SCRIPT_BUNDLED_SCHEMA}  ${JSON_SCHEMA_LOCATION_TO_BE_BUNDLED} ${BUNDLED_SCHEMA_DIR} 2>&1 | tee ${CMAKE_SOURCE_DIR}/blackboard-schema-bundled.log
+  WORKING_DIRECTORY ${WORK_DIR}
+  COMMENT "constructing json schema bundled file from ${JSON_SCHEMA_LOCATION_TO_BE_BUNDLED} to ${BUNDLED_SCHEMA_DIR}"
+  VERBATIM #This allows to pass $[ in strings such as defined in LUA_ROBOT_SPEC_DIR_INTERPOLATE
+)
+
+
+# execute_process (
+#   COMMAND bash ${BASH_SCRIPT_TASK_SCHEMAS} ${TASK_LIBRARIES_DIR} ${LUA_ROBOT_SPEC_DIR}
+#   WORKING_DIRECTORY ${WORK_DIR} #Will change the current directory and thus the generated files will be saved here
+#   COMMAND_ECHO STDOUT
+# ) 
+
+# this will be always called:
+
+
+
+# Ensure that the JSON schema is generated before building
+# add_dependencies(crospi_application generate_json_schema)
+
+install(DIRECTORY applications task_specifications skill_specifications robot_models schemas
+  DESTINATION share/${PROJECT_NAME})
+
+# Install Python node scripts
+install(PROGRAMS example_nodes/pose_msg_to_tf.py example_nodes/sine_wave_tf.py
+  DESTINATION lib/${PROJECT_NAME})
+
+
+# Install using setup.py
+ament_python_install_package(skill_specifications)
+
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  # the following line skips the linter which checks for copyrights
+  # comment the line when a copyright and license is added to all source files
+  set(ament_cmake_copyright_FOUND TRUE)
+  # the following line skips cpplint (only works in a git repo)
+  # comment the line when this package is in a git repo and when
+  # a copyright and license is added to all source files
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+
+ament_package()
+
