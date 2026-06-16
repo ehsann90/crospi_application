@@ -24,12 +24,12 @@ import sys
 from betfsm import (
     SUCCEED, TICKING, CANCEL, TIMEOUT,ABORT,NO_EVENT,
     get_logger,set_logger,Sequence, Repeat, Message, TimedWait,
-    EventSequential, ctrl_c_polling_func, http_polling_func,combine,EventConcurrent, ConcurrentSequence, TickingStateMachine
+    EventSequential, EventConcurrent, ConcurrentSequence, TickingStateMachine
 )
 
 from betfsm_ros import BeTFSMNode, ROSRunner
                         
-from betfsm_crospi import load_task_list, eTaSL_StateMachine
+from betfsm_crospi import load_task_list, CrospiTask
 
 
 import math
@@ -40,25 +40,25 @@ class MyStateMachine(TickingStateMachine):
         super().__init__("my_state_machine",[SUCCEED, ABORT])
 
         self.add_state(
-            eTaSL_StateMachine("MovingHome","MovingHome",node=None), 
+            CrospiTask("MovingHome","MovingHome",node=None), 
             transitions={SUCCEED: "MovingDown", 
                         ABORT: ABORT}
         )
 
         self.add_state(
-            eTaSL_StateMachine("MovingDown","MovingDown",node=None), 
+            CrospiTask("MovingDown","MovingDown",node=None), 
             transitions={SUCCEED: "MovingUp", 
                         ABORT: ABORT}
         )
 
         self.add_state(
-            eTaSL_StateMachine("MovingUp","MovingUp",node=None), 
+            CrospiTask("MovingUp","MovingUp",node=None), 
             transitions={SUCCEED: "MovingSpline", 
                         ABORT: ABORT}
         )
 
         self.add_state(
-            eTaSL_StateMachine("MovingSpline","MovingSpline",node=None), 
+            CrospiTask("MovingSpline","MovingSpline",node=None), 
             transitions={SUCCEED: "pause_state", 
                         ABORT: ABORT}
         )
