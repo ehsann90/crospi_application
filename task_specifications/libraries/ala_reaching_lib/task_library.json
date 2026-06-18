@@ -1,0 +1,11 @@
+{
+    "name": "ala_reaching_lib",
+    "description": "Tasks for replicating Iregui et al. 2021 adaptable-levels-of-autonomy reaching framework.",
+    "task_specifications": [
+        {
+            "name": "ala_reaching_minimal",
+            "file": "task_specifications/ala_reaching_minimal.etasl.lua",
+            "description": "Minimal joystick velocity SIM for ALA reaching replication."
+        }
+    ]
+}

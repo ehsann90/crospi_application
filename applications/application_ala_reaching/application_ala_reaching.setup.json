@@ -1,0 +1,112 @@
+{
+    "$schema": "../../schemas/generated/blackboard-schema-bundled.json",
+    "blackboard": {
+        "etasl": {
+            "general": {
+                "event_topic": "crospi_node/events",
+                "sample_time": 0.01
+            },
+            "initializer": {
+                "full": true,
+                "sample_time": 0.01,
+                "duration": 3.0,
+                "convergence_criterion": 1E-8,
+                "weightfactor": 1E4
+            },
+            "solver": {
+                "is-qpoasessolver": true,
+                "nWSR": 100,
+                "regularization_factor": 1E-8,
+                "cputime": 10
+            }
+        },
+        "robot": {
+            "robotsimulators": [
+                {
+                    "is-simple_kinematic_simulation": true,
+                    "initial_joints": [1.5708, -1.5708, 1.5708, -1.5708, -1.5708, 0],
+                    "periodicity": 0.01,
+                    "robot_joints": [
+                        "shoulder_pan_joint",
+                        "shoulder_lift_joint",
+                        "elbow_joint",
+                        "wrist_1_joint",
+                        "wrist_2_joint",
+                        "wrist_3_joint"
+                    ]
+                }
+            ],
+            "default_robot_specification": {
+                "is-inline_robotspecification": true,
+                "urdf_path": "$[crospi_application]/robot_models/urdf_models/robot_setups/ur10e/use_case_setup_ur10e.urdf",
+                "tcp_frame": {
+                    "child_link": "tool0",
+                    "parent_link": "base_link"
+                },
+                "additional_frames": [
+                    {
+                        "name": "FT_sensor_frame",
+                        "child_link": "ft_frame",
+                        "parent_link": "base_link"
+                    }
+                ],
+                "robot_joints": [
+                    "shoulder_pan_joint",
+                    "shoulder_lift_joint",
+                    "elbow_joint",
+                    "wrist_1_joint",
+                    "wrist_2_joint",
+                    "wrist_3_joint"
+                ]
+            }
+        },
+        "iohandlers": {
+            "outputhandlers": [
+                {
+                    "is-JointStateOutputHandler": true,
+                    "topic-name": "/joint_states"
+                },
+                {
+                    "is-TopicOutputHandler": true,
+                    "topic-name": "/ala/tcp_pose",
+                    "variable-names": ["time", "x_tf", "y_tf", "z_tf", "qx_tf", "qy_tf", "qz_tf", "qw_tf"]
+                },
+                {
+                    "is-TopicOutputHandler": true,
+                    "topic-name": "/ala/debug_velocity",
+                    "variable-names": ["desired_vel_x", "desired_vel_y", "desired_vel_z"]
+                },
+                {
+                    "is-TopicOutputHandler": true,
+                    "topic-name": "/ala/debug_path",
+                    "variable-names": ["s", "path_x", "path_y", "path_z", "target_x", "target_y", "target_z"]
+                }
+            ],
+            "inputhandlers": [
+                {
+                    "is-TwistInputHandler": true,
+                    "default_twist": {
+                        "linear": {"x": 0, "y": 0, "z": 0},
+                        "angular": {"x": 0, "y": 0, "z": 0}
+                    },
+                    "depth": 1,
+                    "number_of_tries": 10,
+                    "topic-name": "/spacenav/twist",
+                    "when_unpublished": "use_default",
+                    "varname": "joystick_input"
+                },
+                {
+                    "is-VectorInputHandler": true,
+                    "topic-name": "/ala/blended_target",
+                    "msg_type": "geometry_msgs/Point",
+                    "default_vector": {"x": 0.50, "y": 0.00, "z": 0.30},
+                    "depth": 1,
+                    "number_of_tries": 10,
+                    "when_unpublished": "use_default",
+                    "varname": "ala_blended_target"
+                }
+            ]
+        }
+    },
+    "$defs": {}
+}
