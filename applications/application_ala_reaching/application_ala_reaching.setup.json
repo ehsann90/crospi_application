@@ -10,13 +10,13 @@
                 "full": true,
                 "sample_time": 0.01,
                 "duration": 3.0,
-                "convergence_criterion": 1E-8,
-                "weightfactor": 1E4
+                "convergence_criterion": 1e-08,
+                "weightfactor": 10000.0
             },
             "solver": {
                 "is-qpoasessolver": true,
                 "nWSR": 100,
-                "regularization_factor": 1E-8,
+                "regularization_factor": 1e-08,
                 "cputime": 10
             }
         },
@@ -24,7 +24,14 @@
             "robotsimulators": [
                 {
                     "is-simple_kinematic_simulation": true,
-                    "initial_joints": [1.5708, -1.5708, 1.5708, -1.5708, -1.5708, 0],
+                    "initial_joints": [
+                        1.5708,
+                        -1.5708,
+                        1.5708,
+                        -1.5708,
+                        -1.5708,
+                        0
+                    ],
                     "periodicity": 0.01,
                     "robot_joints": [
                         "shoulder_pan_joint",
@@ -69,25 +76,58 @@
                 {
                     "is-TopicOutputHandler": true,
                     "topic-name": "/ala/tcp_pose",
-                    "variable-names": ["time", "x_tf", "y_tf", "z_tf", "qx_tf", "qy_tf", "qz_tf", "qw_tf"]
+                    "variable-names": [
+                        "time",
+                        "x_tf",
+                        "y_tf",
+                        "z_tf",
+                        "qx_tf",
+                        "qy_tf",
+                        "qz_tf",
+                        "qw_tf"
+                    ]
                 },
                 {
                     "is-TopicOutputHandler": true,
                     "topic-name": "/ala/debug_velocity",
-                    "variable-names": ["desired_vel_x", "desired_vel_y", "desired_vel_z"]
+                    "variable-names": [
+                        "desired_vel_x",
+                        "desired_vel_y",
+                        "desired_vel_z"
+                    ]
                 },
                 {
                     "is-TopicOutputHandler": true,
                     "topic-name": "/ala/debug_path",
-                    "variable-names": ["s", "path_x", "path_y", "path_z", "target_x", "target_y", "target_z"]
+                    "variable-names": [
+                        "s",
+                        "path_x",
+                        "path_y",
+                        "path_z",
+                        "target_x",
+                        "target_y",
+                        "target_z",
+                        "distance_to_path",
+                        "rtube",
+                        "auto_enable",
+                        "rvgf_factor"
+                    ]
                 }
             ],
             "inputhandlers": [
                 {
                     "is-TwistInputHandler": true,
                     "default_twist": {
-                        "linear": {"x": 0, "y": 0, "z": 0},
-                        "angular": {"x": 0, "y": 0, "z": 0}
+                        "linear": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        },
+                        "angular": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        }
                     },
                     "depth": 1,
                     "number_of_tries": 10,
@@ -97,13 +137,31 @@
                 },
                 {
                     "is-VectorInputHandler": true,
-                    "topic-name": "/ala/blended_target",
+                    "topic-name": "/ala/active_target",
                     "msg_type": "geometry_msgs/Point",
-                    "default_vector": {"x": 0.50, "y": 0.00, "z": 0.30},
+                    "default_vector": {
+                        "x": 0.5,
+                        "y": 0.0,
+                        "z": 0.3
+                    },
                     "depth": 1,
                     "number_of_tries": 10,
                     "when_unpublished": "use_default",
                     "varname": "ala_blended_target"
+                },
+                {
+                    "is-VectorInputHandler": true,
+                    "topic-name": "/ala/auto_cmd",
+                    "msg_type": "geometry_msgs/Point",
+                    "default_vector": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "depth": 1,
+                    "number_of_tries": 10,
+                    "when_unpublished": "use_default",
+                    "varname": "ala_auto_cmd"
                 }
             ]
         }
