@@ -1,11 +1,29 @@
 {
-    "name": "ala_reaching_lib",
-    "description": "Tasks for replicating Iregui et al. 2021 adaptable-levels-of-autonomy reaching framework.",
-    "task_specifications": [
-        {
-            "name": "ala_reaching_minimal",
-            "file": "task_specifications/ala_reaching_minimal.etasl.lua",
-            "description": "Minimal joystick velocity SIM for ALA reaching replication."
-        }
-    ]
+  "$schema": "../../task_library.schema.json",
+  "name": "ala_reaching_lib",
+  "description": "Task library for adaptive-level-autonomy reaching with RVGF/manual guidance and automatic reaching.",
+  "license": "GNU GPLv3",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Ehsan Khorrambakht",
+      "affiliation": "University of Pisa",
+      "email": "ehsan.khorrambakht@ing.unipi.it"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "Ehsan Khorrambakht",
+      "affiliation": "University of Pisa",
+      "email": "ehsan.khorrambakht@ing.unipi.it"
+    }
+  ],
+  "task_specifications": [
+    {
+      "name": "ala_reach_assist_task",
+      "description": "Adaptive-level-autonomy reaching task using user velocity, RVGF tube guidance, path progress, and automatic path following.",
+      "task_specification_file": "task_specifications/ala_reach_assist_task.etasl.lua",
+      "task_schema_file": "task_json_schemas/ala_reach_assist_task.etasl.json"
+    }
+  ]
 }

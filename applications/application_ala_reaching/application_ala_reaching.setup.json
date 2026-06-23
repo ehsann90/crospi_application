@@ -101,16 +101,19 @@
                     "topic-name": "/ala/debug_path",
                     "variable-names": [
                         "s",
-                        "path_x",
-                        "path_y",
-                        "path_z",
-                        "target_x",
-                        "target_y",
-                        "target_z",
+                        "path_x", "path_y", "path_z",
+                        "target_x", "target_y", "target_z",
+                        "tcp_x", "tcp_y", "tcp_z",
+                        "start_x", "start_y", "start_z",
+                        "pos_err_x", "pos_err_y", "pos_err_z",
                         "distance_to_path",
                         "rtube",
-                        "auto_enable",
-                        "rvgf_factor"
+                        "G2_from_weights",
+                        "w_user_velocity",
+                        "w_rvgf",
+                        "w_s_damping",
+                        "w_auto_progress",
+                        "w_auto_follow"
                     ]
                 }
             ],
@@ -162,6 +165,34 @@
                     "number_of_tries": 10,
                     "when_unpublished": "use_default",
                     "varname": "ala_auto_cmd"
+                },
+                {
+                    "is-VectorInputHandler": true,
+                    "topic-name": "/ala/motion_weights",
+                    "msg_type": "geometry_msgs/Point",
+                    "default_vector": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.005
+                    },
+                    "depth": 1,
+                    "number_of_tries": 10,
+                    "when_unpublished": "use_default",
+                    "varname": "ala_motion_weights"
+                },
+                {
+                    "is-VectorInputHandler": true,
+                    "topic-name": "/ala/auto_weights",
+                    "msg_type": "geometry_msgs/Point",
+                    "default_vector": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 1.0
+                    },
+                    "depth": 1,
+                    "number_of_tries": 10,
+                    "when_unpublished": "use_default",
+                    "varname": "ala_auto_weights"
                 }
             ]
         }

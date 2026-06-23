@@ -1,0 +1,34 @@
+{
+    "$schema": "../skill_library.schema.json",
+    "name": "ala_reaching_skill",
+    "description": "Skill library for adaptive-level-autonomy reaching with Crospi and BeTFSM",
+    "license": "GNU GPLv3",
+    "version": "0.1.0",
+    "required_task_libs": [
+        {
+            "lib_name": "core_task_lib",
+            "repo_url": "git@gitlab.kuleuven.be:todo.git",
+            "version": "0.1.0"
+        },
+        {
+            "lib_name": "ala_reaching_lib",
+            "repo_url": "git@gitlab.kuleuven.be:todo.git",
+            "version": "0.1.0"
+        }
+    ],
+    "authors": [
+        {
+            "name": "Ehsan Khorrambakht",
+            "affiliation": "University of Pisa",
+            "email": "ehsan.khorrambakht@ing.unipi.it"
+        }
+    ],
+    "maintainers": [
+        {
+            "name": "Ehsan Khorrambakht",
+            "affiliation": "University of Pisa",
+            "email": "ehsan.khorrambakht@ing.unipi.it"
+        }
+    ],
+    "acknowledgements": "Developed as part of the ALA/RVGF reaching replication study."
+}
