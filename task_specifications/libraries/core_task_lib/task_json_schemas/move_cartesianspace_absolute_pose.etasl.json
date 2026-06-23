@@ -1,0 +1,151 @@
+{
+  "type":"object",
+  "description":"Parameters needed to the corresponding task specification in eTaSL",
+  "properties":{
+    "from-core_task_lib-version-0.1.0":{
+      "const":true,
+      "type":"boolean",
+      "description":"Library core_task_lib version 0.1.0.\n Set to true to indicate that task specification comes from the library above. \n Library description: Library with basic task specifications that may be needed in most applications\nAuthors: Santiago Iregui (KU Leuven), Erwin Aertbeliën (KU Leuven), Federico Ulloa (KU Leuven)"
+    }
+  },
+  "$schema":"http://json-schema.org/draft-06/schema#",
+  "additionalProperties":true,
+  "dependencies":{
+    "is-move_cartesianspace_absolute_pose":{
+      "required":["file_path","parameters"],
+      "properties":{
+        "file_path":{
+          "const":"$[crospi_application]/task_specifications/libraries/core_task_lib/task_specifications/move_cartesianspace_absolute_pose.etasl.lua",
+          "type":"string",
+          "description":"File path of the corresponding task specification"
+        },
+        "parameters":{
+          "type":"object",
+          "description":"List of parameters needed to define an instance of the task specification",
+          "properties":{
+            "desired_pose":{
+              "oneOf":[{
+                  "items":{
+                    "type":"number"
+                  },
+                  "type":"array",
+                  "minItems":7,
+                  "maxItems":7
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":[0,0,0,0,0,0,1],
+              "examples":["$blackboard/output_param/my_task/desired_pose","$application_defined_parameter"],
+              "description":"Array with the desired pose of the task frame in [x,y,z,qx,qy,qz,qw]. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "error_pos_th":{
+              "oneOf":[{
+                  "type":"number"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":0.0005,
+              "examples":["$blackboard/output_param/my_task/error_pos_th","$application_defined_parameter"],
+              "description":"Position error threshold for monitoring [m]. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "eq_r":{
+              "oneOf":[{
+                  "type":"number"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":0.08,
+              "examples":["$blackboard/output_param/my_task/eq_r","$application_defined_parameter"],
+              "description":"Equivalent radius [m]. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "maxacc":{
+              "oneOf":[{
+                  "type":"number",
+                  "maximum":0.5
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":0.1,
+              "examples":["$blackboard/output_param/my_task/maxacc","$application_defined_parameter"],
+              "description":"Maximum acceleration [m/s^2]. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "task_frame":{
+              "oneOf":[{
+                  "type":"string"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":"tcp_frame",
+              "examples":["$blackboard/output_param/my_task/task_frame","$application_defined_parameter"],
+              "description":"Name of frame used to control the robot in cartesian space. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "error_rot_th":{
+              "oneOf":[{
+                  "type":"number"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":0.01,
+              "examples":["$blackboard/output_param/my_task/error_rot_th","$application_defined_parameter"],
+              "description":"Rotation error threshold for monitoring [rad]. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "maxvel":{
+              "oneOf":[{
+                  "type":"number",
+                  "maximum":0.5
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":0.1,
+              "examples":["$blackboard/output_param/my_task/maxvel","$application_defined_parameter"],
+              "description":"Maximum velocity [m/s]. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            }
+          },
+          "additionalProperties":false,
+          "required":["maxvel","maxacc","desired_pose"]
+        }
+      }
+    },
+    "from-core_task_lib-version-0.1.0":{
+      "required":["is-move_cartesianspace_absolute_pose"],
+      "properties":{
+        "is-move_cartesianspace_absolute_pose":{
+          "const":true,
+          "type":"boolean",
+          "description":"Task Specification: move_cartesianspace_absolute_pose.etasl.lua\nSet to true to indicate that the task uses the task specification mentioned above. \n Task description: This task specification allows to a desired task frame to a desired pose in cartesian space."
+        }
+      }
+    }
+  },
+  "required":["from-core_task_lib-version-0.1.0"],
+  "$id":"move_cartesianspace_absolute_pose",
+  "title":"Task Specification Configuration"
+}

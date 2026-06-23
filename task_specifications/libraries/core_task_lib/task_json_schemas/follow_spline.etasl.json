@@ -1,0 +1,105 @@
+{
+  "type":"object",
+  "description":"Parameters needed to the corresponding task specification in eTaSL",
+  "properties":{
+    "from-core_task_lib-version-0.1.0":{
+      "const":true,
+      "type":"boolean",
+      "description":"Library core_task_lib version 0.1.0.\n Set to true to indicate that task specification comes from the library above. \n Library description: Library with basic task specifications that may be needed in most applications\nAuthors: Santiago Iregui (KU Leuven), Erwin Aertbeliën (KU Leuven), Federico Ulloa (KU Leuven)"
+    }
+  },
+  "$schema":"http://json-schema.org/draft-06/schema#",
+  "additionalProperties":true,
+  "dependencies":{
+    "is-follow_spline":{
+      "required":["file_path","parameters"],
+      "properties":{
+        "file_path":{
+          "const":"$[crospi_application]/task_specifications/libraries/core_task_lib/task_specifications/follow_spline.etasl.lua",
+          "type":"string",
+          "description":"File path of the corresponding task specification"
+        },
+        "parameters":{
+          "type":"object",
+          "description":"List of parameters needed to define an instance of the task specification",
+          "properties":{
+            "maxacc":{
+              "oneOf":[{
+                  "type":"number",
+                  "maximum":0.5
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":0.1,
+              "examples":["$blackboard/output_param/my_task/maxacc","$application_defined_parameter"],
+              "description":"Maximum acceleration [m/s^2]. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "csv_file_path":{
+              "oneOf":[{
+                  "pattern":".*\\.csv$",
+                  "type":"string"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":"$[crospi_application]/task_specifications/libraries/core_task_lib/task_specifications/misc/example_spline.csv",
+              "examples":["$blackboard/output_param/my_task/csv_file_path","$application_defined_parameter"],
+              "description":"File path for CSV file containing the points that define the spline.. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "task_frame":{
+              "oneOf":[{
+                  "type":"string"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":"tcp_frame",
+              "examples":["$blackboard/output_param/my_task/task_frame","$application_defined_parameter"],
+              "description":"Name of frame that will follow the spline. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "maxvel":{
+              "oneOf":[{
+                  "type":"number",
+                  "maximum":0.5
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":0.1,
+              "examples":["$blackboard/output_param/my_task/maxvel","$application_defined_parameter"],
+              "description":"Maximum velocity [m/s]. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            }
+          },
+          "additionalProperties":false,
+          "required":["maxvel","maxacc","csv_file_path"]
+        }
+      }
+    },
+    "from-core_task_lib-version-0.1.0":{
+      "required":["is-follow_spline"],
+      "properties":{
+        "is-follow_spline":{
+          "const":true,
+          "type":"boolean",
+          "description":"Task Specification: follow_spline.etasl.lua\nSet to true to indicate that the task uses the task specification mentioned above. \n Task description: This task specification allows a task frame to follow a spline which is fitted based on a list of position points on a CSV file.\nThe CSV file must have 4 columns.\nThe CSV file must have normalized path variable (instead of time) that starts in 0 and ends in 1 (to indicate the progress), and the three remaining columns are X Y Z coordinates in that order.\n"
+        }
+      }
+    }
+  },
+  "required":["from-core_task_lib-version-0.1.0"],
+  "$id":"follow_spline",
+  "title":"Task Specification Configuration"
+}

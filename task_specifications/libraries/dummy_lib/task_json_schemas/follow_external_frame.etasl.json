@@ -1,0 +1,74 @@
+{
+  "type":"object",
+  "description":"Parameters needed to the corresponding task specification in eTaSL",
+  "properties":{
+    "from-dummy_lib-version-0.1.0":{
+      "const":true,
+      "type":"boolean",
+      "description":"Library dummy_lib version 0.1.0.\n Set to true to indicate that task specification comes from the library above. \n Library description: Library with basic task specifications that may be needed in most applications\nAuthors: Santiago Iregui (KU Leuven)"
+    }
+  },
+  "$schema":"http://json-schema.org/draft-06/schema#",
+  "additionalProperties":true,
+  "dependencies":{
+    "is-follow_external_frame":{
+      "required":["file_path","parameters"],
+      "properties":{
+        "file_path":{
+          "const":"$[crospi_application]/task_specifications/libraries/dummy_lib/task_specifications/follow_external_frame.etasl.lua",
+          "type":"string",
+          "description":"File path of the corresponding task specification"
+        },
+        "parameters":{
+          "type":"object",
+          "description":"List of parameters needed to define an instance of the task specification",
+          "properties":{
+            "tf_name_var":{
+              "oneOf":[{
+                  "type":"string"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":"tf_var",
+              "examples":["$blackboard/output_param/my_task/tf_name_var","$application_defined_parameter"],
+              "description":"Name of the frame where the tfinputhandler publishes the pose coming from the TF. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "task_frame":{
+              "oneOf":[{
+                  "type":"string"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":"tcp_frame",
+              "examples":["$blackboard/output_param/my_task/task_frame","$application_defined_parameter"],
+              "description":"Name of frame used to control the robot in cartesian space. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            }
+          },
+          "additionalProperties":false,
+          "required":["task_frame","tf_name_var"]
+        }
+      }
+    },
+    "from-dummy_lib-version-0.1.0":{
+      "required":["is-follow_external_frame"],
+      "properties":{
+        "is-follow_external_frame":{
+          "const":true,
+          "type":"boolean",
+          "description":"Task Specification: follow_external_frame.etasl.lua\nSet to true to indicate that the task uses the task specification mentioned above. \n Task description: This task specification allows to control the angular and linear velocity the end effector via a 6D joystick (a.k.a. spacemouse)."
+        }
+      }
+    }
+  },
+  "required":["from-dummy_lib-version-0.1.0"],
+  "$id":"follow_external_frame",
+  "title":"Task Specification Configuration"
+}

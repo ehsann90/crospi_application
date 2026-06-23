@@ -1,0 +1,116 @@
+{
+  "type":"object",
+  "description":"Parameters needed to the corresponding task specification in eTaSL",
+  "properties":{
+    "from-debug_lib-version-0.1.0":{
+      "const":true,
+      "type":"boolean",
+      "description":"Library debug_lib version 0.1.0.\n Set to true to indicate that task specification comes from the library above. \n Library description: Library with basic task specifications that may be needed when debugging communication and control of a robot\nAuthors: Santiago Iregui (KU Leuven), Federico Ulloa (KU Leuven)"
+    }
+  },
+  "$schema":"http://json-schema.org/draft-06/schema#",
+  "additionalProperties":true,
+  "dependencies":{
+    "is-move_joystick_reading_sensor_vals_driver":{
+      "required":["file_path","parameters"],
+      "properties":{
+        "file_path":{
+          "const":"$[crospi_application]/task_specifications/libraries/debug_lib/task_specifications/move_joystick_reading_sensor_vals_driver.etasl.lua",
+          "type":"string",
+          "description":"File path of the corresponding task specification"
+        },
+        "parameters":{
+          "type":"object",
+          "description":"List of parameters needed to define an instance of the task specification",
+          "properties":{
+            "linear_scale":{
+              "oneOf":[{
+                  "type":"number"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":1,
+              "examples":["$blackboard/output_param/my_task/linear_scale","$application_defined_parameter"],
+              "description":"Scales the magnitude of the linear velocity coming from the joystick. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "activate_angular":{
+              "oneOf":[{
+                  "type":"boolean"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":false,
+              "examples":["$blackboard/output_param/my_task/activate_angular","$application_defined_parameter"],
+              "description":"If true, the angular velocities of the joystick will control the angular velocities of the defined frame. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "angular_scale":{
+              "oneOf":[{
+                  "type":"number"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":1,
+              "examples":["$blackboard/output_param/my_task/angular_scale","$application_defined_parameter"],
+              "description":"Scales the magnitude of the angular velocity coming from the joystick. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "activate_linear":{
+              "oneOf":[{
+                  "type":"boolean"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":true,
+              "examples":["$blackboard/output_param/my_task/activate_linear","$application_defined_parameter"],
+              "description":"If true, the linear velocities of the joystick will control the linear velocities of the defined frame. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            },
+            "task_frame":{
+              "oneOf":[{
+                  "type":"string"
+                },{
+                  "pattern":"^\\$blackboard(/[a-zA-Z0-9_\\-]+)+$",
+                  "type":"string"
+                },{
+                  "const":"$application_defined_parameter",
+                  "type":"string"
+                }],
+              "default":"tcp_frame",
+              "examples":["$blackboard/output_param/my_task/task_frame","$application_defined_parameter"],
+              "description":"Name of frame used to control the robot in cartesian space. \nSet as a string beginning with $blackboard such as `$blackboard/output_param/my_task/my_param` if the value is not yet known and thus will be set externally at runtime (only once) depending on e.g. the outcome of a previous action or the outcome of another module.\nSet as $application_defined_parameter to indicate that the parameter is defined by the application and not by the skill specification."
+            }
+          },
+          "additionalProperties":false,
+          "required":["activate_linear","activate_angular"]
+        }
+      }
+    },
+    "from-debug_lib-version-0.1.0":{
+      "required":["is-move_joystick_reading_sensor_vals_driver"],
+      "properties":{
+        "is-move_joystick_reading_sensor_vals_driver":{
+          "const":true,
+          "type":"boolean",
+          "description":"Task Specification: move_joystick_reading_sensor_vals_driver.etasl.lua\nSet to true to indicate that the task uses the task specification mentioned above. \n Task description: This task specification allows to control the angular and linear velocity the end effector via a 6D joystick (a.k.a. spacemouse)."
+        }
+      }
+    }
+  },
+  "required":["from-debug_lib-version-0.1.0"],
+  "$id":"move_joystick_reading_sensor_vals_driver",
+  "title":"Task Specification Configuration"
+}

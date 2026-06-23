@@ -1,0 +1,45 @@
+{
+  "type":"object",
+  "description":"Parameters needed to the corresponding task specification in eTaSL. In this case no parameters were specified and hence the properties field is empty",
+  "properties":{
+    "from-core_task_lib-version-0.1.0":{
+      "const":true,
+      "type":"boolean",
+      "description":"Library core_task_lib version 0.1.0.\n Set to true to indicate that task specification comes from the library above. \n Library description: Library with basic task specifications that may be needed in most applications\nAuthors: Santiago Iregui (KU Leuven), Erwin Aertbeliën (KU Leuven), Federico Ulloa (KU Leuven)"
+    }
+  },
+  "$schema":"http://json-schema.org/draft-06/schema#",
+  "additionalProperties":true,
+  "dependencies":{
+    "is-idle":{
+      "required":["file_path","parameters"],
+      "properties":{
+        "file_path":{
+          "const":"$[crospi_application]/task_specifications/libraries/core_task_lib/task_specifications/idle.etasl.lua",
+          "type":"string",
+          "description":"File path of the corresponding task specification"
+        },
+        "parameters":{
+          "type":"object",
+          "description":"List of parameters needed to define an instance of the task specification",
+          "properties":[],
+          "additionalProperties":false,
+          "required":[]
+        }
+      }
+    },
+    "from-core_task_lib-version-0.1.0":{
+      "required":["is-idle"],
+      "properties":{
+        "is-idle":{
+          "const":true,
+          "type":"boolean",
+          "description":"Task Specification: idle.etasl.lua\nSet to true to indicate that the task uses the task specification mentioned above. \n Task description: Runs robot in idle state, e.g. so that joints_states are published."
+        }
+      }
+    }
+  },
+  "required":["from-core_task_lib-version-0.1.0"],
+  "$id":"idle",
+  "title":"Task Specification Configuration"
+}
