@@ -17,6 +17,7 @@ from betfsm_ros import BeTFSMNode, ROSRunner
 from betfsm_ros.events_ros import TopicEventReceiver
 
 from betfsm_crospi import load_task_list, CrospiTask, CrospiDeactivate
+from geometry_msgs.msg import Point
 
 
 class WaitForSkillEvent(TickingState):
@@ -146,12 +147,46 @@ class AlaReachingSkill(TickingStateMachine):
         self.add_state(
             CrospiTask("ReachAssist", "ReachAssist", node=None),
             transitions={
-                SUCCEED: "IdleHoldStart",
-                ABORT: ABORT,
-                CANCEL: ABORT,
-                TIMEOUT: ABORT
+                SUCCEED: "AutoOffAfterReach",
+                ABORT: "AutoOffAfterReach",
+                CANCEL: "AutoOffAfterReach",
+                TIMEOUT: "AutoOffAfterReach"
             }
         )
+
+        self.add_state(
+            PublishAutoOff("AutoOffAfterReach"),
+            transitions={
+                SUCCEED: "IdleHoldStart",
+                ABORT: ABORT
+            }
+        )
+
+
+class PublishAutoOff(TickingState):
+    """
+    Publishes /ala/auto_cmd = 0 once.
+    Used to make sure automatic mode is reset after a reaching episode.
+    """
+
+    def __init__(self, name="AutoOff"):
+        super().__init__(name, [SUCCEED, ABORT])
+        node = BeTFSMNode.get_instance()
+        self.pub = node.create_publisher(Point, "/ala/auto_cmd", 10)
+        self.published = False
+
+    def doo(self, blackboard):
+        msg = Point()
+        msg.x = 0.0
+        msg.y = 0.0
+        msg.z = 0.0
+
+        # Publish a few times to make sure the autonomy manager receives it.
+        for _ in range(5):
+            self.pub.publish(msg)
+
+        get_logger().info("Auto mode reset: published /ala/auto_cmd = 0")
+        return SUCCEED
 
 
 def main(args=None):
